@@ -10,7 +10,67 @@ public class Practice4 {
         final int INSERT = 155;
         final int DELETE = 127;
 
-        return null;
+        StringBuffer sb = new StringBuffer();
+
+        int step = (int) 'a' - 'A';
+
+        int cmdIdx = 0;
+        int curSor = 0;
+        boolean isShift = false;
+        boolean isCapslock = false;
+        boolean isInsert = false;
+        while (cmdIdx != keyLog.length) {
+            int cur = keyLog[cmdIdx];
+            if (cur == BACK_SPACE) {
+                if (curSor == 0) {
+                    cmdIdx++;
+                    continue;
+                }
+                sb.delete(curSor - 1, curSor);
+                curSor = Math.max(0, curSor - 1);
+            } else if (cur == SHIFT) {
+                isShift = true;
+            } else if (cur == CAPS_LOCK) {
+                isCapslock = !isCapslock;
+            } else if (cur == SPACE_BAR) {
+                // 공백문자 삽입
+            } else if (cur == KEY_LEFT) {
+                curSor = Math.max(0, curSor - 1);
+            } else if (cur == KEY_RIGHT) {
+                curSor = Math.min(sb.length(), curSor + 1);
+            } else if (cur == INSERT) {
+                isInsert = !isInsert;
+            } else if (cur == DELETE) {
+                if (curSor == sb.length()) {
+                    cmdIdx++;
+                    continue;
+                }
+                sb.delete(curSor, curSor + 1);
+            } else if (cur >= 97 && cur <= 122) {
+                int data = cur;
+
+                if (isCapslock && isShift) {
+                    data = cur;
+                } else if ( isCapslock || isShift) {
+                    data -= step;
+                }
+                // 데이터 입력
+                isShift = false;
+                curSor++;
+            } else if (cur >= 46 && cur <= 57) {
+                char[] specialKey =  {'(', '!', '@', '#', '$', '%', '^', '&', '*', '('};
+                // 데이터 입력
+
+                isShift = false;
+                curSor += 1;
+            }
+
+            cmdIdx++;
+        }
+
+
+
+        return sb.toString();
     }
 
     public static void main(String[] args) {
