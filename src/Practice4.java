@@ -33,7 +33,8 @@ public class Practice4 {
             } else if (cur == CAPS_LOCK) {
                 isCapslock = !isCapslock;
             } else if (cur == SPACE_BAR) {
-                // 공백문자 삽입
+                inputData(sb, ' ', curSor, isInsert);
+                curSor += 1;
             } else if (cur == KEY_LEFT) {
                 curSor = Math.max(0, curSor - 1);
             } else if (cur == KEY_RIGHT) {
@@ -54,13 +55,16 @@ public class Practice4 {
                 } else if ( isCapslock || isShift) {
                     data -= step;
                 }
-                // 데이터 입력
+                inputData(sb, (char)data, curSor, isInsert);
                 isShift = false;
                 curSor++;
             } else if (cur >= 46 && cur <= 57) {
-                char[] specialKey =  {'(', '!', '@', '#', '$', '%', '^', '&', '*', '('};
-                // 데이터 입력
-
+                if (isShift) {
+                    char[] specialKey =  {'(', '!', '@', '#', '$', '%', '^', '&', '*', '('};
+                    inputData(sb, specialKey[cur - '0'], curSor, isInsert);
+                } else {
+                    inputData(sb, (char)cur, curSor, isInsert);
+                }
                 isShift = false;
                 curSor += 1;
             }
@@ -68,9 +72,15 @@ public class Practice4 {
             cmdIdx++;
         }
 
-
-
         return sb.toString();
+    }
+
+    public static void inputData(StringBuffer sb, char data, int curSor, boolean isInsert) {
+        if (isInsert == false) {
+            sb.insert(curSor, data);
+        } else {
+            sb.setCharAt(curSor, data);
+        }
     }
 
     public static void main(String[] args) {
